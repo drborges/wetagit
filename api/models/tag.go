@@ -3,12 +3,18 @@ package models
 import (
 	"appengine"
 	"appengine/datastore"
+	"github.com/drborges/wetagit/api/services/db"
 )
 
 type Tag struct {
-	Value   string `json:"value"`
+	db.Entity
+	Value string `json:"value"`
 }
 
-func (this *Tag) Key(c appengine.Context) *datastore.Key {
-	return datastore.NewKey(c, "Tags", this.Value, 0, nil)
+func (this *Tag) Kind() string {
+	return "Tags"
+}
+
+func (this *Tag) NewKey(c appengine.Context) *datastore.Key {
+	return datastore.NewKey(c, this.Kind(), this.Value, 0, nil)
 }

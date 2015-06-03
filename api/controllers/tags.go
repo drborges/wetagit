@@ -15,9 +15,9 @@ func (this Tags) Create(c *gin.Context) {
 	tag := new(models.Tag)
 	c.Bind(tag)
 
-	if ok := this.Locate.Datastore().Save(tag); !ok {
+	if err := this.Locate.Datastore().Create(tag); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Failed to create tag",
+			"message": err.Error(),
 		})
 		return
 	}

@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/drborges/wetagit/api/services/db"
 )
 
 type Locator struct {
@@ -12,7 +13,7 @@ func (this *Locator) Register(c *gin.Context) {
 	this.context = c
 }
 
-func (this *Locator) Datastore() Datastore {
+func (this *Locator) Datastore() db.Datastore {
 	context := Gae{this.context.Request}.NewContext()
-	return Datastore{context}
+	return db.Datastore{context}
 }
