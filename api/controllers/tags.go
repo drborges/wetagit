@@ -42,8 +42,8 @@ func (this Tags) Retrieve(c *gin.Context) {
 	tag.SetUUID(c.Params.ByName("id"))
 
 	if err := this.Locate.Datastore().Load(tag); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": fmt.Sprintf("Could not find tag for id %v", tag.UUID()),
 		})
 		return
 	}
