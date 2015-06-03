@@ -18,23 +18,20 @@ func (this Tags) Create(c *gin.Context) {
 	c.Bind(tag)
 
 	err := this.Locate.Datastore().Create(tag)
-	if err == db.ErrEntityExists {
-		c.Header("Location", "/tags/" + tag.UUID())
-		c.JSON(http.StatusNotModified, tag)
-		return
-	}
-
-	if err != nil {
+	if err != nil && err != db.ErrEntityExists {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
 		})
 		return
 	}
 
+	status := http.StatusCreated
+	if err == db.ErrEntityExists {
+		status = http.StatusNotModified
+	}
+
 	c.Header("Location", "/tags/" + tag.UUID())
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "Tag successfully created",
-	})
+	c.JSON(status, tag)
 }
 
 func (this Tags) Retrieve(c *gin.Context) {
