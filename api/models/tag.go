@@ -3,7 +3,7 @@ package models
 import (
 	"appengine"
 	"appengine/datastore"
-	"github.com/drborges/wetagit/api/services/db"
+	"github.com/drborges/datastore-model"
 )
 
 type Tag struct {

@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/drborges/wetagit/api/services/db"
+	"github.com/drborges/datastore-model"
 )
 
 type Locator struct {

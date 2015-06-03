@@ -5,7 +5,7 @@ import (
 	"github.com/drborges/wetagit/api/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"github.com/drborges/wetagit/api/services/db"
+	"github.com/drborges/datastore-model"
 	"fmt"
 )
 
