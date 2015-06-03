@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	ErrNoSuchEntity = errors.New("Entity not found")
 	ErrEntityExists = errors.New("Entity already exists")
 )
 
@@ -44,5 +45,18 @@ func (this Datastore) Load(e entity) error {
 	if !e.HasKey() {
 		e.setKey(e.NewKey(this.Context))
 	}
+
 	return datastore.Get(this.Context, e.Key(), e)
+}
+
+func (this Datastore) Delete(e entity) error {
+	if err := this.Load(e); err == datastore.ErrNoSuchEntity {
+		return ErrNoSuchEntity
+	}
+
+	if !e.HasKey() {
+		e.setKey(e.NewKey(this.Context))
+	}
+
+	return datastore.Delete(this.Context, e.Key())
 }

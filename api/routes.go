@@ -27,5 +27,6 @@ func Router() http.Handler {
 
 	router.POST("/tags", controllers.Tags{locator}.Create)
 	router.GET("/tags/:id", controllers.Tags{locator}.Retrieve)
+	router.DELETE("/tags/:id", controllers.Tags{locator}.Remove)
 	return router
 }

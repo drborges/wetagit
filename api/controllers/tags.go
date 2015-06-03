@@ -17,13 +17,14 @@ func (this Tags) Create(c *gin.Context) {
 	tag := new(models.Tag)
 	c.Bind(tag)
 
-	if err := this.Locate.Datastore().Create(tag); err == db.ErrEntityExists {
+	err := this.Locate.Datastore().Create(tag)
+	if err == db.ErrEntityExists {
 		c.Header("Location", "/tags/" + tag.UUID())
 		c.JSON(http.StatusNotModified, tag)
 		return
 	}
 
-	if err := this.Locate.Datastore().Create(tag); err != nil {
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
 		})
@@ -43,6 +44,28 @@ func (this Tags) Retrieve(c *gin.Context) {
 	if err := this.Locate.Datastore().Load(tag); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, tag)
+}
+
+func (this Tags) Remove(c *gin.Context) {
+	tag := new(models.Tag)
+	tag.SetUUID(c.Params.ByName("id"))
+
+	err := this.Locate.Datastore().Delete(tag)
+	if err == db.ErrNoSuchEntity {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprintf("%v", err),
 		})
 		return
 	}
