@@ -26,5 +26,6 @@ func Router() http.Handler {
 	//router.Use(middlewares.Auth.Authorize)
 
 	router.POST("/tags", controllers.Tags{locator}.Create)
+	router.GET("/tags/:id", controllers.Tags{locator}.Retrieve)
 	return router
 }

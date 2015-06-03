@@ -11,6 +11,8 @@ type entity interface {
 	Key() *datastore.Key
 	setKey(*datastore.Key)
 	NewKey(appengine.Context) *datastore.Key
+	UUID() string
+	SetUUID(uuid string) error
 }
 
 type Entity struct {
@@ -27,4 +29,14 @@ func (this *Entity) setKey(k *datastore.Key) {
 
 func (this *Entity) Key() *datastore.Key {
 	return this.key
+}
+
+func (this *Entity) UUID() string {
+	return this.key.Encode()
+}
+
+func (this *Entity) SetUUID(uuid string) error {
+	key, err := datastore.DecodeKey(uuid)
+	this.setKey(key)
+	return err
 }
