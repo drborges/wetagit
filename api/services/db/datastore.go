@@ -11,7 +11,22 @@ var (
 	ErrEntityExists = errors.New("Entity already exists")
 )
 
-// Datastore
+type entity interface {
+	Kind() string
+	HasKey() bool
+	Key() *datastore.Key
+	setKey(*datastore.Key)
+	NewKey(appengine.Context) *datastore.Key
+	UUID() string
+	SetUUID(uuid string) error
+}
+
+// Datastore Service that provides a set of
+// operations to make it easy on you when
+// working with appengine datastore
+//
+// It works along with db.Model in order to
+// provide its features.
 type Datastore struct {
 	Context appengine.Context
 }
@@ -49,6 +64,11 @@ func (this Datastore) Load(e entity) error {
 	return datastore.Get(this.Context, e.Key(), e)
 }
 
+// Delete deletes an entity from datastore
+//
+// ErrNoSuchEntity is returned in case the
+// key provided does not match any existent
+// entity
 func (this Datastore) Delete(e entity) error {
 	if err := this.Load(e); err == datastore.ErrNoSuchEntity {
 		return ErrNoSuchEntity

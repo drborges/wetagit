@@ -7,7 +7,7 @@ import (
 )
 
 type Tag struct {
-	db.Entity
+	db.Model
 	Value string `json:"value"`
 }
 
