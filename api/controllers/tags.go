@@ -43,17 +43,17 @@ func (this Tags) Create(c *gin.Context) {
 		status = http.StatusNotModified
 	}
 
-	c.Header("Location", "/tags/" + tag.UUID())
+	c.Header("Location", "/tags/" + tag.KeyAsUUID())
 	c.JSON(status, tag)
 }
 
 func (this Tags) Retrieve(c *gin.Context) {
 	tag := new(models.Tag)
-	tag.SetUUID(c.Params.ByName("id"))
+	tag.SetKeyFromUUID(c.Params.ByName("id"))
 
 	if err := this.Datastore().Load(tag); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"message": fmt.Sprintf("Could not find tag for id %v", tag.UUID()),
+			"message": fmt.Sprintf("Could not find tag for id %v", tag.KeyAsUUID()),
 		})
 		return
 	}
@@ -63,7 +63,7 @@ func (this Tags) Retrieve(c *gin.Context) {
 
 func (this Tags) Remove(c *gin.Context) {
 	tag := new(models.Tag)
-	tag.SetUUID(c.Params.ByName("id"))
+	tag.SetKeyFromUUID(c.Params.ByName("id"))
 
 	err := this.Datastore().Delete(tag)
 	if err == db.ErrNoSuchEntity {
