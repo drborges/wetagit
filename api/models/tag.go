@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/drborges/datastore-model"
-	"appengine/datastore"
 )
 
 type Tag struct {
@@ -16,6 +15,6 @@ type Tag struct {
 // instance of db.Model thus it won't be a db.entity
 type Tags []*Tag
 
-func (this Tags) ByOwner(owner string) *datastore.Query {
-	return datastore.NewQuery(db.ExtractEntityKind(new(Tag))).Filter("Owner=", owner)
+func (this Tags) ByOwner(owner string) *db.Query {
+	return db.QueryFor(new(Tag)).Filter("Owner=", owner)
 }
