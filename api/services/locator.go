@@ -18,5 +18,5 @@ func (this *Locator) Register(c *gin.Context) {
 
 func (this *Locator) Datastore() db.Datastore {
 	context := Gae{this.context.Request}.NewContext()
-	return db.Datastore{context}
+	return db.NewDatastore(context)
 }
