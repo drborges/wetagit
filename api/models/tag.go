@@ -5,7 +5,7 @@ import (
 )
 
 type Tag struct {
-	db.Model     `db:"Tags"`
+	db.Entity    `db:"Tags"`
 	Value string `json:"value" db:"id"`
 	Owner string `json:"owner"`
 }
