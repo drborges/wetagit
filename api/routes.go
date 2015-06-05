@@ -8,7 +8,7 @@ import (
 )
 
 func Router() http.Handler {
-	router := gin.Default()
+	router := gin.New()
 	locator := &services.Locator{}
 	// Providers are used to initialize request bound services
 	// to be used within controllers through lookup mechanism.
@@ -25,6 +25,7 @@ func Router() http.Handler {
 	//router.Use(middlewares.Auth.Authenticate)
 	//router.Use(middlewares.Auth.Authorize)
 
+	router.GET("/tags", controllers.Tags{locator}.List)
 	router.POST("/tags", controllers.Tags{locator}.Create)
 	router.GET("/tags/:id", controllers.Tags{locator}.Retrieve)
 	router.DELETE("/tags/:id", controllers.Tags{locator}.Remove)

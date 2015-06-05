@@ -13,6 +13,19 @@ type Tags struct {
 	Locate *services.Locator
 }
 
+func (this Tags) List(c *gin.Context) {
+	owner := c.Query("owner")
+	tags := models.Tags{}
+	if err := this.Locate.Datastore().Query(tags.ByOwner(owner)).All(&tags); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprintf("%v", err),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, tags)
+}
+
 func (this Tags) Create(c *gin.Context) {
 	tag := new(models.Tag)
 	c.Bind(tag)
