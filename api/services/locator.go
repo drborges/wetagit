@@ -5,9 +5,12 @@ import (
 	"github.com/drborges/datastore-model"
 )
 
+type DatastoreProvider func() db.Datastore
+
 type Locator struct {
 	context *gin.Context
 }
+
 
 func (this *Locator) Register(c *gin.Context) {
 	this.context = c

@@ -25,9 +25,9 @@ func Router() http.Handler {
 	//router.Use(middlewares.Auth.Authenticate)
 	//router.Use(middlewares.Auth.Authorize)
 
-	router.GET("/tags", controllers.Tags{locator}.List)
-	router.POST("/tags", controllers.Tags{locator}.Create)
-	router.GET("/tags/:id", controllers.Tags{locator}.Retrieve)
-	router.DELETE("/tags/:id", controllers.Tags{locator}.Remove)
+	router.GET("/tags", controllers.Tags{locator.Datastore}.List)
+	router.POST("/tags", controllers.Tags{locator.Datastore}.Create)
+	router.GET("/tags/:id", controllers.Tags{locator.Datastore}.Retrieve)
+	router.DELETE("/tags/:id", controllers.Tags{locator.Datastore}.Remove)
 	return router
 }

@@ -10,13 +10,13 @@ import (
 )
 
 type Tags struct {
-	Locate *services.Locator
+	Datastore services.DatastoreProvider
 }
 
 func (this Tags) List(c *gin.Context) {
 	owner := c.Query("owner")
 	tags := models.Tags{}
-	if err := this.Locate.Datastore().Query(tags.ByOwner(owner)).All(&tags); err != nil {
+	if err := this.Datastore().Query(tags.ByOwner(owner)).All(&tags); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
 		})
@@ -30,7 +30,7 @@ func (this Tags) Create(c *gin.Context) {
 	tag := new(models.Tag)
 	c.Bind(tag)
 
-	err := this.Locate.Datastore().Create(tag)
+	err := this.Datastore().Create(tag)
 	if err != nil && err != db.ErrEntityExists {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
@@ -51,7 +51,7 @@ func (this Tags) Retrieve(c *gin.Context) {
 	tag := new(models.Tag)
 	tag.SetUUID(c.Params.ByName("id"))
 
-	if err := this.Locate.Datastore().Load(tag); err != nil {
+	if err := this.Datastore().Load(tag); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": fmt.Sprintf("Could not find tag for id %v", tag.UUID()),
 		})
@@ -65,7 +65,7 @@ func (this Tags) Remove(c *gin.Context) {
 	tag := new(models.Tag)
 	tag.SetUUID(c.Params.ByName("id"))
 
-	err := this.Locate.Datastore().Delete(tag)
+	err := this.Datastore().Delete(tag)
 	if err == db.ErrNoSuchEntity {
 		c.JSON(http.StatusNotFound, gin.H{
 			"message": err.Error(),
