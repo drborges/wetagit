@@ -1,12 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/drborges/wetagit/api/models"
 	"github.com/drborges/wetagit/api/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"github.com/drborges/datastore-model"
-	"fmt"
 )
 
 type Tags struct {
@@ -16,6 +15,7 @@ type Tags struct {
 func (this Tags) List(c *gin.Context) {
 	owner := c.Query("owner")
 	tags := models.Tags{}
+
 	if err := this.Datastore().Query(tags.ByOwner(owner)).All(&tags); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
@@ -30,30 +30,24 @@ func (this Tags) Create(c *gin.Context) {
 	tag := new(models.Tag)
 	c.Bind(tag)
 
-	err := this.Datastore().Create(tag)
-	if err != nil && err != db.ErrEntityExists {
+	if err := this.Datastore().Create(tag); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
 		})
 		return
 	}
 
-	status := http.StatusCreated
-	if err == db.ErrEntityExists {
-		status = http.StatusNotModified
-	}
-
-	c.Header("Location", "/tags/" + tag.KeyAsUUID())
-	c.JSON(status, tag)
+	c.Header("Location", "/tags/"+tag.StringId())
+	c.JSON(http.StatusCreated, tag)
 }
 
 func (this Tags) Retrieve(c *gin.Context) {
 	tag := new(models.Tag)
-	tag.SetKeyFromUUID(c.Params.ByName("id"))
+	tag.SetStringId(c.Params.ByName("id"))
 
 	if err := this.Datastore().Load(tag); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"message": fmt.Sprintf("Could not find tag for id %v", tag.KeyAsUUID()),
+			"message": fmt.Sprintf("Could not find tag for id %v", tag.StringId()),
 		})
 		return
 	}
@@ -63,22 +57,14 @@ func (this Tags) Retrieve(c *gin.Context) {
 
 func (this Tags) Remove(c *gin.Context) {
 	tag := new(models.Tag)
-	tag.SetKeyFromUUID(c.Params.ByName("id"))
+	tag.SetStringId(c.Params.ByName("id"))
 
-	err := this.Datastore().Delete(tag)
-	if err == db.ErrNoSuchEntity {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": err.Error(),
-		})
-		return
-	}
-
-	if err != nil {
+	if err := this.Datastore().Delete(tag); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprintf("%v", err),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, tag)
+	c.JSON(http.StatusOK, "")
 }

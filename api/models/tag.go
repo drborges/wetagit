@@ -5,9 +5,9 @@ import (
 )
 
 type Tag struct {
-	db.Entity    `db:"Tags"`
-	Value string `json:"value" db:"id"`
-	Owner string `json:"owner"`
+	db.Model `db:"Tags"`
+	Value    string `json:"value" db:"id"`
+	Owner    string `json:"owner"`
 }
 
 // Warning: It MUST be a slice of pointers for now
