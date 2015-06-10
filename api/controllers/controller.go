@@ -9,48 +9,60 @@ import (
 	"fmt"
 )
 
+type datasource interface {
+	Load(db.Entity) error
+	LoadAll(...db.Entity) error
+	Create(db.Entity) error
+	CreateAll(...db.Entity) error
+	Update(db.Entity) error
+	UpdateAll(...db.Entity) error
+	Delete(db.Entity) error
+	DeleteAll(...db.Entity) error
+	Query(q *db.Query) *db.Querier
+}
+
 type Controller struct {
-	Datastore db.Datastore
+	Datastore datasource
 	Query     url.Values
 	Request   *http.Request
 	Headers   http.Header
-	render    render.Render
+	Renderer  render.Render
 }
 
 func (this *Controller) Register(render render.Render, req *http.Request) {
-	this.Datastore = db.NewDatastore(services.Gae{req}.NewContext())
+	this.Datastore = datasource(db.NewDatastore(services.Gae{req}.NewContext()))
 	this.Query = req.URL.Query()
 	this.Headers = render.Header()
-	this.render = render
+	this.Renderer = render
 	this.Request = req
 }
 
 func (this Controller) RenderOk(data ...interface{}) {
 	if len(data) == 1 {
-		this.render.JSON(http.StatusOK, data)
+		this.Renderer.JSON(http.StatusOK, data[0])
 		return
 	}
 
-	this.render.Status(http.StatusOK)
+	this.Renderer.Status(http.StatusOK)
 }
 
 func (this Controller) RenderCreated(data ...interface{}) {
 	if len(data) == 1 {
-		this.render.JSON(http.StatusCreated, data)
+		this.Renderer.JSON(http.StatusCreated, data[0])
 		return
 	}
 
-	this.render.Status(http.StatusCreated)
+	this.Renderer.Status(http.StatusCreated)
 }
 
 func (this Controller) RenderStatusNotFound(message string) {
-	this.render.JSON(http.StatusNotFound, map[string]string{
+	this.Renderer.JSON(http.StatusNotFound, map[string]string{
 		"message": fmt.Sprintf("%v", message),
 	})
 }
 
-func (this Controller) RenderError(message string) {
-	this.render.JSON(http.StatusNotFound, map[string]string{
+func (this Controller) RenderInternalServerError(message string) {
+	this.Renderer.JSON(http.StatusNotFound, map[string]string{
 		"message": fmt.Sprintf("%v", message),
 	})
 }

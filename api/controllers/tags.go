@@ -22,12 +22,12 @@ func (this *tags) List() {
 		return
 	}
 
-	this.render.JSON(http.StatusOK, tags)
+	this.Renderer.JSON(http.StatusOK, tags)
 }
 
 func (this *tags) Create(tag models.Tag) {
 	if err := this.Datastore.Create(&tag); err != nil {
-		this.RenderError(err.Error())
+		this.RenderInternalServerError(err.Error())
 		return
 	}
 
@@ -52,7 +52,7 @@ func (this *tags) Remove(params martini.Params) {
 	tag.SetStringId(params["id"])
 
 	if err := this.Datastore.Delete(tag); err != nil {
-		this.RenderError(err.Error())
+		this.RenderInternalServerError(err.Error())
 		return
 	}
 
