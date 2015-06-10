@@ -37,32 +37,39 @@ func (this *Controller) Register(render render.Render, req *http.Request) {
 	this.Request = req
 }
 
-func (this Controller) RenderOk(data ...interface{}) {
-	if len(data) == 1 {
-		this.Renderer.JSON(http.StatusOK, data[0])
+func (this Controller) RenderOkMessage(message string, args ...interface{}) {
+	if len(args) > 0 {
+		this.Renderer.JSON(http.StatusOK, map[string]string {
+			"message": fmt.Sprintf(message, args...),
+		})
 		return
 	}
 
 	this.Renderer.Status(http.StatusOK)
 }
 
-func (this Controller) RenderCreated(data ...interface{}) {
-	if len(data) == 1 {
-		this.Renderer.JSON(http.StatusCreated, data[0])
-		return
-	}
-
-	this.Renderer.Status(http.StatusCreated)
+func (this Controller) RenderCreatedData(data db.Entity) {
+	this.Renderer.Header().Add("Location", Resource{data}.Path())
+	this.Renderer.JSON(http.StatusCreated, map[string]interface{} {
+		"data": data,
+	})
+	return
 }
 
-func (this Controller) RenderStatusNotFound(message string) {
-	this.Renderer.JSON(http.StatusNotFound, map[string]string{
-		"message": fmt.Sprintf("%v", message),
+func (this Controller) RenderData(data interface{}) {
+	this.Renderer.JSON(http.StatusOK, map[string]interface{} {
+		"data": data,
 	})
 }
 
-func (this Controller) RenderInternalServerError(message string) {
+func (this Controller) RenderStatusNotFoundMessage(message string, args ...interface{}) {
 	this.Renderer.JSON(http.StatusNotFound, map[string]string{
-		"message": fmt.Sprintf("%v", message),
+		"message": fmt.Sprintf(message, args...),
+	})
+}
+
+func (this Controller) RenderInternalServerErrorMessage(message string, args ...interface{}) {
+	this.Renderer.JSON(http.StatusNotFound, map[string]string{
+		"message": fmt.Sprintf(message, args...),
 	})
 }
