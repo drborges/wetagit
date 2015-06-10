@@ -1,69 +1,60 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/drborges/wetagit/api/models"
-	"github.com/gin-gonic/gin"
+	"github.com/go-martini/martini"
 	"net/http"
+	"fmt"
 )
 
-type Tags struct {
+var Tags = tags{}
+
+type tags struct {
 	Controller
 }
 
-func (this *Tags) List(c *gin.Context) {
-	owner := c.Query("owner")
+func (this *tags) List() {
+	owner := this.Query.Get("owner")
 	tags := models.Tags{}
 
-	if err := this.Datasource.Query(tags.ByOwner(owner)).All(&tags); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": fmt.Sprintf("%v", err),
-		})
+	if err := this.Datastore.Query(tags.ByOwner(owner)).All(&tags); err != nil {
+		this.RenderStatusNotFound("Count not find tags for owner " + owner)
 		return
 	}
 
-	c.JSON(http.StatusOK, tags)
+	this.render.JSON(http.StatusOK, tags)
 }
 
-func (this *Tags) Create(c *gin.Context) {
-	tag := new(models.Tag)
-	c.Bind(tag)
-
-	if err := this.Datasource.Create(tag); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": fmt.Sprintf("%v", err),
-		})
+func (this *tags) Create(tag models.Tag) {
+	if err := this.Datastore.Create(&tag); err != nil {
+		this.RenderError(err.Error())
 		return
 	}
 
-	c.Header("Location", "/tags/"+tag.StringId())
-	c.JSON(http.StatusCreated, tag)
+	this.Headers.Add("Location", "/tags/"+tag.StringId())
+	this.RenderCreated(tag)
 }
 
-func (this *Tags) Retrieve(c *gin.Context) {
-	tag := new(models.Tag)
-	tag.SetStringId(c.Params.ByName("id"))
+func (this *tags) Retrieve(params martini.Params) {
+	tag := &models.Tag{}
+	tag.SetStringId(params["id"])
 
-	if err := this.Datasource.Load(tag); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": fmt.Sprintf("Could not find tag for id %v", tag.StringId()),
-		})
+	if err := this.Datastore.Load(tag); err != nil {
+		this.RenderStatusNotFound("Could not find tag for id " + tag.StringId())
 		return
 	}
 
-	c.JSON(http.StatusOK, tag)
+	this.RenderOk(tag)
 }
 
-func (this *Tags) Remove(c *gin.Context) {
-	tag := new(models.Tag)
-	tag.SetStringId(c.Params.ByName("id"))
+func (this *tags) Remove(params martini.Params) {
+	tag := &models.Tag{}
+	tag.SetStringId(params["id"])
 
-	if err := this.Datasource.Delete(tag); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": fmt.Sprintf("%v", err),
-		})
+	if err := this.Datastore.Delete(tag); err != nil {
+		this.RenderError(err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, "")
+	this.RenderOk(fmt.Sprintf("Tag %v successfully removed", tag.StringId()))
 }

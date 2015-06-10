@@ -2,24 +2,27 @@ package api
 
 import (
 	"github.com/drborges/wetagit/api/controllers"
-	"github.com/gin-gonic/gin"
+	"github.com/drborges/wetagit/api/models"
+	"github.com/go-martini/martini"
+	"github.com/martini-contrib/binding"
+	"github.com/martini-contrib/render"
 	"net/http"
 )
 
 func Router() http.Handler {
-	router := gin.New()
+	router := martini.Classic()
+	Body := binding.Bind
 
 	// TODO implements authentication middleware
 	//router.Use(middlewares.Auth.Authenticate)
 	//router.Use(middlewares.Auth.Authorize)
+	router.Use(render.Renderer())
+	router.Use(controllers.Tags.Register)
 
-	tags := new(controllers.Tags)
+	router.Get("/tags", controllers.Tags.List)
+	router.Post("/tags", Body(models.Tag{}), controllers.Tags.Create)
+	router.Get("/tags/:id", controllers.Tags.Retrieve)
+	router.Delete("/tags/:id", controllers.Tags.Remove)
 
-	router.Use(tags.Register)
-
-	router.GET("/tags", tags.List)
-	router.POST("/tags", tags.Create)
-	router.GET("/tags/:id", tags.Retrieve)
-	router.DELETE("/tags/:id", tags.Remove)
 	return router
 }
