@@ -6,8 +6,8 @@ import (
 
 type Tag struct {
 	db.Model `db:"Tags"`
-	Value    string `json:"value" db:"id"`
-	Owner    string `json:"owner"`
+	Name  string `json:"name" db:"id"`
+	Owner string `json:"owner"`
 }
 
 // Warning: It MUST be a slice of pointers for now
