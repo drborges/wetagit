@@ -30,5 +30,9 @@ func Router() http.Handler {
 	router.Get("/posts/:id", controllers.Posts.Retrieve)
 	router.Delete("/posts/:id", controllers.Posts.Remove)
 
+	router.Use(controllers.Users.Register)
+	router.Post("/users", Body(models.User{}), controllers.Users.Create)
+	router.Get("/users/:id", controllers.Users.Retrieve)
+
 	return router
 }
