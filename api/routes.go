@@ -17,12 +17,18 @@ func Router() http.Handler {
 	//router.Use(middlewares.Auth.Authenticate)
 	//router.Use(middlewares.Auth.Authorize)
 	router.Use(render.Renderer())
-	router.Use(controllers.Tags.Register)
 
+	router.Use(controllers.Tags.Register)
 	router.Get("/tags", controllers.Tags.List)
 	router.Post("/tags", Body(models.Tag{}), controllers.Tags.Create)
 	router.Get("/tags/:id", controllers.Tags.Retrieve)
 	router.Delete("/tags/:id", controllers.Tags.Remove)
+
+	router.Use(controllers.Posts.Register)
+	router.Get("/posts", controllers.Posts.List)
+	router.Post("/posts", Body(models.Post{}), controllers.Posts.Create)
+	router.Get("/posts/:id", controllers.Posts.Retrieve)
+	router.Delete("/posts/:id", controllers.Posts.Remove)
 
 	return router
 }

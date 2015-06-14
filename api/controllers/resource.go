@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	"strings"
 	"fmt"
-	"github.com/drborges/datastore-model"
+	"github.com/drborges/ds"
+	"strings"
 )
 
 type Resource struct {
-	db.Entity
+	ds.Resource
 }
 
 func (this Resource) Path() string {
-	return fmt.Sprintf("/%v/%v", strings.ToLower(this.Key().Kind()), this.StringId())
+	return fmt.Sprintf("/%v/%v", strings.ToLower(this.Key().Kind()), this.UUID())
 }

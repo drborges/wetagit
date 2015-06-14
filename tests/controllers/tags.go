@@ -1,14 +1,14 @@
 package controllers_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	"appengine/datastore"
+	"github.com/drborges/datastore-model"
 	"github.com/drborges/wetagit/api/controllers"
 	"github.com/drborges/wetagit/api/models"
-	"github.com/drborges/datastore-model"
-	"appengine/datastore"
-	"net/http"
 	"github.com/martini-contrib/render"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+	"net/http"
 )
 
 type FakeDatastore struct {

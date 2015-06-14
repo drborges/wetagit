@@ -1,13 +1,21 @@
 package models
 
 import (
-	"github.com/drborges/datastore-model"
+	"appengine/datastore"
+	"github.com/drborges/ds"
 )
 
 type Tag struct {
-	db.Model `db:"Tags"`
-	Name  string `json:"name" db:"id"`
+	ds.Model
+	Name  string `json:"name"`
 	Owner string `json:"owner"`
+}
+
+func (this Tag) KeyMetadata() *ds.KeyMetadata {
+	return &ds.KeyMetadata{
+		Kind:     "Tags",
+		StringID: this.Name,
+	}
 }
 
 // Warning: It MUST be a slice of pointers for now
@@ -15,6 +23,6 @@ type Tag struct {
 // instance of db.Model thus it won't be a db.entity
 type Tags []*Tag
 
-func (this Tags) ByOwner(owner string) *db.Query {
-	return db.From(new(Tag)).Filter("Owner=", owner)
+func (this Tags) ByOwner(owner string) *datastore.Query {
+	return datastore.NewQuery(Tag{}.KeyMetadata().Kind).Filter("Owner=", owner)
 }
