@@ -17,7 +17,7 @@ func (this *users) Create(user models.User) {
 		return
 	}
 
-	this.RenderCreatedData(&user)
+	this.RenderCreatedResource(&user)
 }
 
 func (this *users) Retrieve(params martini.Params) {

@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"github.com/drborges/ds"
-	"github.com/drborges/wetagit/api/services"
 	"github.com/martini-contrib/render"
 	"net/http"
 	"net/url"
@@ -17,8 +16,8 @@ type Controller struct {
 	Renderer  render.Render
 }
 
-func (this *Controller) Register(render render.Render, req *http.Request) {
-	this.Datastore = ds.Datastore{services.Gae{req}.NewContext()}
+func (this *Controller) Register(render render.Render, req *http.Request, ds ds.Datastore) {
+	this.Datastore = ds
 	this.Query = req.URL.Query()
 	this.Headers = render.Header()
 	this.Renderer = render
@@ -36,10 +35,10 @@ func (this Controller) RenderOkMessage(message string, args ...interface{}) {
 	this.Renderer.Status(http.StatusOK)
 }
 
-func (this Controller) RenderCreatedData(data ds.Resource) {
-	this.Renderer.Header().Add("Location", Resource{data}.Path())
+func (this Controller) RenderCreatedResource(resource ds.Resource) {
+	this.Renderer.Header().Add("Location", Resource{resource}.Path())
 	this.Renderer.JSON(http.StatusCreated, map[string]interface{}{
-		"data": data,
+		"data": resource,
 	})
 	return
 }

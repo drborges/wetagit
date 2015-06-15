@@ -29,7 +29,7 @@ func (this *tags) Create(tag models.Tag) {
 		return
 	}
 
-	this.RenderCreatedData(&tag)
+	this.RenderCreatedResource(&tag)
 }
 
 func (this *tags) Retrieve(params martini.Params) {

@@ -29,7 +29,7 @@ func (this *posts) Create(post models.Post) {
 		return
 	}
 
-	this.RenderCreatedData(&post)
+	this.RenderCreatedResource(&post)
 }
 
 func (this *posts) Retrieve(params martini.Params) {

@@ -7,9 +7,8 @@ import (
 
 type User struct {
 	ds.Model
-	Name          string   `json:"username"`
-	Device        string   `json:"device"`
-	Subscriptions []string `json:"subscriptions"`
+	Name   string `json:"username"`
+	Device string `json:"device"`
 }
 
 func (this User) KeyMetadata() *ds.KeyMetadata {

@@ -7,6 +7,7 @@ import (
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
 	"net/http"
+	"github.com/drborges/wetagit/api/injectables"
 )
 
 func Router() http.Handler {
@@ -17,6 +18,8 @@ func Router() http.Handler {
 	//router.Use(middlewares.Auth.Authenticate)
 	//router.Use(middlewares.Auth.Authorize)
 	router.Use(render.Renderer())
+	router.Use(injectables.DatastoreProvider)
+	router.Use(injectables.CurrentUserProvider)
 
 	router.Use(controllers.Tags.Register)
 	{
@@ -38,6 +41,11 @@ func Router() http.Handler {
 	{
 		router.Post("/users", Body(models.User{}), controllers.Users.Create)
 		router.Get("/users/:id", controllers.Users.Retrieve)
+	}
+
+	router.Use(controllers.Subscriptions.Register)
+	{
+		router.Post("/subscriptions", Body(models.Subscriptions{}), controllers.Subscriptions.Create)
 	}
 
 	return router
