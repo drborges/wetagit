@@ -22,10 +22,10 @@ func (this *users) Create(user models.User) {
 
 func (this *users) Retrieve(params martini.Params) {
 	user := &models.User{}
-	user.SetUUID(params["id"])
+	user.SetID(params["id"])
 
 	if err := this.Datastore.Load(user); err != nil {
-		this.RenderStatusNotFoundMessage("Could not find user for id %v", user.UUID())
+		this.RenderStatusNotFoundMessage("Could not find user for id %v", user.ID())
 		return
 	}
 

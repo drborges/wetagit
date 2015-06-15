@@ -19,11 +19,15 @@ func (this User) KeyMetadata() *ds.KeyMetadata {
 	}
 }
 
+func (this User) CacheID() string {
+	return this.ID()
+}
+
 // Warning: It MUST be a slice of pointers for now
 // Otherwise, Tag is initialized without a default
 // instance of db.Model thus it won't be a db.entity
 type Users []*User
 
 func (this Users) ByName(username string) *datastore.Query {
-	return datastore.NewQuery(User{}.KeyMetadata().Kind).Filter("Username=", username)
+	return datastore.NewQuery(User{}.KeyMetadata().Kind).Filter("Name=", username)
 }

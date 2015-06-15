@@ -11,5 +11,5 @@ type Resource struct {
 }
 
 func (this Resource) Path() string {
-	return fmt.Sprintf("/%v/%v", strings.ToLower(this.Key().Kind()), this.UUID())
+	return fmt.Sprintf("/%v/%v", strings.ToLower(this.Key().Kind()), this.ID())
 }

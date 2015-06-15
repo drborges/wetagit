@@ -19,20 +19,26 @@ func Router() http.Handler {
 	router.Use(render.Renderer())
 
 	router.Use(controllers.Tags.Register)
-	router.Get("/tags", controllers.Tags.List)
-	router.Post("/tags", Body(models.Tag{}), controllers.Tags.Create)
-	router.Get("/tags/:id", controllers.Tags.Retrieve)
-	router.Delete("/tags/:id", controllers.Tags.Remove)
+	{
+		router.Get("/tags", controllers.Tags.List)
+		router.Post("/tags", Body(models.Tag{}), controllers.Tags.Create)
+		router.Get("/tags/:id", controllers.Tags.Retrieve)
+		router.Delete("/tags/:id", controllers.Tags.Remove)
+	}
 
 	router.Use(controllers.Posts.Register)
-	router.Get("/posts", controllers.Posts.List)
-	router.Post("/posts", Body(models.Post{}), controllers.Posts.Create)
-	router.Get("/posts/:id", controllers.Posts.Retrieve)
-	router.Delete("/posts/:id", controllers.Posts.Remove)
+	{
+		router.Get("/posts", controllers.Posts.List)
+		router.Post("/posts", Body(models.Post{}), controllers.Posts.Create)
+		router.Get("/posts/:id", controllers.Posts.Retrieve)
+		router.Delete("/posts/:id", controllers.Posts.Remove)
+	}
 
 	router.Use(controllers.Users.Register)
-	router.Post("/users", Body(models.User{}), controllers.Users.Create)
-	router.Get("/users/:id", controllers.Users.Retrieve)
+	{
+		router.Post("/users", Body(models.User{}), controllers.Users.Create)
+		router.Get("/users/:id", controllers.Users.Retrieve)
+	}
 
 	return router
 }

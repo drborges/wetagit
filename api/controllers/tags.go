@@ -34,10 +34,10 @@ func (this *tags) Create(tag models.Tag) {
 
 func (this *tags) Retrieve(params martini.Params) {
 	tag := &models.Tag{}
-	tag.SetUUID(params["id"])
+	tag.SetID(params["id"])
 
 	if err := this.Datastore.Load(tag); err != nil {
-		this.RenderStatusNotFoundMessage("Could not find tag for id %v", tag.UUID())
+		this.RenderStatusNotFoundMessage("Could not find tag for id %v", tag.ID())
 		return
 	}
 
@@ -46,12 +46,12 @@ func (this *tags) Retrieve(params martini.Params) {
 
 func (this *tags) Remove(params martini.Params) {
 	tag := &models.Tag{}
-	tag.SetUUID(params["id"])
+	tag.SetID(params["id"])
 
 	if err := this.Datastore.Delete(tag); err != nil {
 		this.RenderInternalServerErrorMessage(err.Error())
 		return
 	}
 
-	this.RenderOkMessage("Tag %v successfully removed", tag.UUID())
+	this.RenderOkMessage("Tag %v successfully removed", tag.ID())
 }
