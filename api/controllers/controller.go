@@ -58,7 +58,7 @@ func (this Controller) RenderStatusNotFoundMessage(message string, args ...inter
 }
 
 func (this Controller) RenderInternalServerErrorMessage(message string, args ...interface{}) {
-	this.Renderer.JSON(http.StatusNotFound, map[string]string{
+	this.Renderer.JSON(http.StatusInternalServerError, map[string]string{
 		"message": fmt.Sprintf(message, args...),
 	})
 }

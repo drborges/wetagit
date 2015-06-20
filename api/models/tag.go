@@ -37,5 +37,5 @@ func (this *Tag) SetResourceID(id string) error {
 type Tags []*Tag
 
 func (this Tags) ByOwner(owner string) *datastore.Query {
-	return datastore.NewQuery(Tag{}.KeyMetadata().Kind).Filter("Owner=", owner)
+	return appx.From(&Tag{}).Filter("Owner=", owner)
 }

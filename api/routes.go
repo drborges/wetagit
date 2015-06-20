@@ -38,6 +38,11 @@ func Router() http.Handler {
 		router.Delete("/posts/:id", controllers.Posts.Remove)
 	}
 
+	router.Use(controllers.Feeds.Register)
+	{
+		router.Get("/feeds/:id", controllers.Feeds.Fetch)
+	}
+
 	router.Use(controllers.Users.Register)
 	{
 		router.Post("/users", Body(models.User{}), controllers.Users.Create)
