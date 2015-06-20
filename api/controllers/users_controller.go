@@ -12,7 +12,7 @@ type users struct {
 }
 
 func (this *users) Create(user models.User) {
-	if err := this.Datastore.Create(&user); err != nil {
+	if err := this.CachedDatastore.Create(&user); err != nil {
 		this.RenderInternalServerErrorMessage(err.Error())
 		return
 	}
@@ -21,11 +21,10 @@ func (this *users) Create(user models.User) {
 }
 
 func (this *users) Retrieve(params martini.Params) {
-	user := &models.User{}
-	user.SetID(params["id"])
+	user := &models.User{Name: params["id"]}
 
-	if err := this.Datastore.Load(user); err != nil {
-		this.RenderStatusNotFoundMessage("Could not find user for id %v", user.ID())
+	if err := this.CachedDatastore.Load(user); err != nil {
+		this.RenderStatusNotFoundMessage("Could not find user for id %v", user.ResourceID())
 		return
 	}
 

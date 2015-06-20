@@ -19,6 +19,7 @@ func Router() http.Handler {
 	//router.Use(middlewares.Auth.Authorize)
 	router.Use(render.Renderer())
 	router.Use(injectables.DatastoreProvider)
+	router.Use(injectables.CachedDatastoreProvider)
 	router.Use(injectables.CurrentUserProvider)
 
 	router.Use(controllers.Tags.Register)

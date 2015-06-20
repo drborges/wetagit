@@ -2,14 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/drborges/ds"
+	"github.com/drborges/appx"
 	"strings"
 )
 
 type Resource struct {
-	ds.Resource
+	appx.Resource
 }
 
 func (this Resource) Path() string {
-	return fmt.Sprintf("/%v/%v", strings.ToLower(this.Key().Kind()), this.ID())
+	return fmt.Sprintf("/%v/%v", strings.ToLower(this.Key().Kind()), this.ResourceID())
 }

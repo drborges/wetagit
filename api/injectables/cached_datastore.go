@@ -7,6 +7,6 @@ import (
 	"github.com/go-martini/martini"
 )
 
-func DatastoreProvider(req *http.Request, c martini.Context) {
-	c.Map(appx.NewDatastore(services.Gae{req}.NewContext()))
+func CachedDatastoreProvider(req *http.Request, c martini.Context) {
+	c.Map(appx.NewCachedDatastore(services.Gae{req}.NewContext()))
 }

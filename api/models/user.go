@@ -2,24 +2,33 @@ package models
 
 import (
 	"appengine/datastore"
-	"github.com/drborges/ds"
+	"github.com/drborges/appx"
 )
 
 type User struct {
-	ds.Model
+	appx.Model
 	Name   string `json:"username"`
 	Device string `json:"device"`
 }
 
-func (this User) KeyMetadata() *ds.KeyMetadata {
-	return &ds.KeyMetadata{
+func (this User) KeyMetadata() *appx.KeyMetadata {
+	return &appx.KeyMetadata{
 		Kind:     "Users",
 		StringID: this.Name,
 	}
 }
 
 func (this User) CacheID() string {
-	return this.ID()
+	return this.Name
+}
+
+func (this User) ResourceID() string {
+	return this.Name
+}
+
+func (this *User) SetResourceID(id string) error {
+	this.Name = id
+	return nil
 }
 
 // Warning: It MUST be a slice of pointers for now

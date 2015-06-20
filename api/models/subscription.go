@@ -1,16 +1,16 @@
 package models
 
 import (
-	"github.com/drborges/ds"
+	"github.com/drborges/appx"
 )
 
 type Subscription struct {
-	ds.Model
+	appx.Model
 	Tag string `json:"tag"`
 }
 
-func (this Subscription) KeyMetadata() *ds.KeyMetadata {
-	return &ds.KeyMetadata{
+func (this Subscription) KeyMetadata() *appx.KeyMetadata {
+	return &appx.KeyMetadata{
 		Kind:      "Subscriptions",
 		StringID:  this.Tag,
 		HasParent: true, // Belongs to a User

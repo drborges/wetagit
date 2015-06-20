@@ -34,10 +34,10 @@ func (this *posts) Create(post models.Post) {
 
 func (this *posts) Retrieve(params martini.Params) {
 	post := &models.Post{}
-	post.SetID(params["id"])
+	post.SetResourceID(params["id"])
 
 	if err := this.Datastore.Load(post); err != nil {
-		this.RenderStatusNotFoundMessage("Could not find post for id %v", post.ID())
+		this.RenderStatusNotFoundMessage("Could not find post for id %v", post.ResourceID())
 		return
 	}
 
@@ -46,12 +46,12 @@ func (this *posts) Retrieve(params martini.Params) {
 
 func (this *posts) Remove(params martini.Params) {
 	post := &models.Post{}
-	post.SetID(params["id"])
+	post.SetResourceID(params["id"])
 
 	if err := this.Datastore.Delete(post); err != nil {
 		this.RenderInternalServerErrorMessage(err.Error())
 		return
 	}
 
-	this.RenderOkMessage("Post %v successfully removed", post.ID())
+	this.RenderOkMessage("Post %v successfully removed", post.ResourceID())
 }

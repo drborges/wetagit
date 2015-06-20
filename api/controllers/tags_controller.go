@@ -24,7 +24,7 @@ func (this *tags) List() {
 }
 
 func (this *tags) Create(tag models.Tag) {
-	if err := this.Datastore.Create(&tag); err != nil {
+	if err := this.CachedDatastore.Create(&tag); err != nil {
 		this.RenderInternalServerErrorMessage(err.Error())
 		return
 	}
@@ -33,11 +33,10 @@ func (this *tags) Create(tag models.Tag) {
 }
 
 func (this *tags) Retrieve(params martini.Params) {
-	tag := &models.Tag{}
-	tag.SetID(params["id"])
+	tag := &models.Tag{Name: params["id"]}
 
-	if err := this.Datastore.Load(tag); err != nil {
-		this.RenderStatusNotFoundMessage("Could not find tag for id %v", tag.ID())
+	if err := this.CachedDatastore.Load(tag); err != nil {
+		this.RenderStatusNotFoundMessage("Could not find tag for id %v", tag.ResourceID())
 		return
 	}
 
@@ -45,13 +44,12 @@ func (this *tags) Retrieve(params martini.Params) {
 }
 
 func (this *tags) Remove(params martini.Params) {
-	tag := &models.Tag{}
-	tag.SetID(params["id"])
+	tag := &models.Tag{Name: params["id"]}
 
-	if err := this.Datastore.Delete(tag); err != nil {
+	if err := this.CachedDatastore.Delete(tag); err != nil {
 		this.RenderInternalServerErrorMessage(err.Error())
 		return
 	}
 
-	this.RenderOkMessage("Tag %v successfully removed", tag.ID())
+	this.RenderOkMessage("Tag %v successfully removed", tag.ResourceID())
 }

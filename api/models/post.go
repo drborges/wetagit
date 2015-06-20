@@ -2,17 +2,17 @@ package models
 
 import (
 	"appengine/datastore"
-	"github.com/drborges/ds"
+	"github.com/drborges/appx"
 )
 
 type Post struct {
-	ds.Model
+	appx.Model
 	Content string `json:"content"`
 	Author  string `json:"author"`
 }
 
-func (this Post) KeyMetadata() *ds.KeyMetadata {
-	return &ds.KeyMetadata{
+func (this Post) KeyMetadata() *appx.KeyMetadata {
+	return &appx.KeyMetadata{
 		Kind: "Posts",
 	}
 }

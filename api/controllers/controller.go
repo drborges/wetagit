@@ -2,22 +2,24 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/drborges/ds"
+	"github.com/drborges/appx"
 	"github.com/martini-contrib/render"
 	"net/http"
 	"net/url"
 )
 
 type Controller struct {
-	Datastore ds.Datastore
-	Query     url.Values
-	Request   *http.Request
-	Headers   http.Header
-	Renderer  render.Render
+	Datastore       *appx.Datastore
+	CachedDatastore *appx.CachedDatastore
+	Query           url.Values
+	Request         *http.Request
+	Headers         http.Header
+	Renderer        render.Render
 }
 
-func (this *Controller) Register(render render.Render, req *http.Request, ds ds.Datastore) {
+func (this *Controller) Register(render render.Render, req *http.Request, ds *appx.Datastore, cds *appx.CachedDatastore) {
 	this.Datastore = ds
+	this.CachedDatastore = cds
 	this.Query = req.URL.Query()
 	this.Headers = render.Header()
 	this.Renderer = render
@@ -35,7 +37,7 @@ func (this Controller) RenderOkMessage(message string, args ...interface{}) {
 	this.Renderer.Status(http.StatusOK)
 }
 
-func (this Controller) RenderCreatedResource(resource ds.Resource) {
+func (this Controller) RenderCreatedResource(resource appx.Resource) {
 	this.Renderer.Header().Add("Location", Resource{resource}.Path())
 	this.Renderer.JSON(http.StatusCreated, map[string]interface{}{
 		"data": resource,
