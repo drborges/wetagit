@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// Feed is not a persistable model thus
+// does not use appx.Model
 type Feed struct {
 	Tags     []string `json:"tags"`
 	Posts    Posts    `json:"posts"`
@@ -12,12 +14,8 @@ type Feed struct {
 }
 
 func NewFeed(id string) *Feed {
-	tagNamesFromID := func(id string) []string {
-		return strings.Split(id, " ")
-	}
-
 	return &Feed{
-		Tags: tagNamesFromID(id),
+		Tags: strings.Split(id, " "),
 	}
 }
 

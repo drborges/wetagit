@@ -6,7 +6,7 @@ import (
 
 type Subscription struct {
 	appx.Model
-	Feed       string `json:"feed"`
+	Feed string `json:"feed"`
 }
 
 func (this *Subscription) KeyMetadata() *appx.KeyMetadata {

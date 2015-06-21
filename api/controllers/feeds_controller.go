@@ -11,7 +11,7 @@ type feeds_controller struct {
 	Controller
 }
 
-func (this *feeds_controller) Fetch(params martini.Params) {
+func (this *feeds_controller) Retrieve(params martini.Params) {
 	feedID := params["id"]
 	feed := models.NewFeed(feedID)
 
@@ -23,7 +23,7 @@ func (this *feeds_controller) Fetch(params martini.Params) {
 	this.RenderData(feed)
 }
 
-func (this *feeds_controller) Follow(params martini.Params, user *models.User) {
+func (this *feeds_controller) Subscribe(params martini.Params, user *models.User) {
 	subscription := &models.Subscription{Feed: params["id"]}
 	subscription.BelongsTo(user)
 
@@ -35,7 +35,7 @@ func (this *feeds_controller) Follow(params martini.Params, user *models.User) {
 	this.RenderData(subscription)
 }
 
-func (this *feeds_controller) Unfollow(params martini.Params, user *models.User) {
+func (this *feeds_controller) Unsubscribe(params martini.Params, user *models.User) {
 	subscription := &models.Subscription{Feed: params["id"]}
 	subscription.BelongsTo(user)
 

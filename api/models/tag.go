@@ -31,9 +31,6 @@ func (this *Tag) SetResourceID(id string) error {
 	return nil
 }
 
-// Warning: It MUST be a slice of pointers for now
-// Otherwise, Tag is initialized without a default
-// instance of db.Model thus it won't be a db.entity
 type Tags []*Tag
 
 func (this Tags) ByOwner(owner string) *datastore.Query {

@@ -18,9 +18,6 @@ func (this Post) KeyMetadata() *appx.KeyMetadata {
 	}
 }
 
-// Warning: It MUST be a slice of pointers for now
-// Otherwise, Tag is initialized without a default
-// instance of db.Model thus it won't be a db.entity
 type Posts []*Post
 
 func (this Posts) ByAuthor(author string) *datastore.Query {

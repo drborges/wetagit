@@ -30,4 +30,3 @@ func (this *users) Retrieve(params martini.Params) {
 
 	this.RenderData(user)
 }
-
