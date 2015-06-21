@@ -3,7 +3,6 @@ package models
 import (
 	"appengine/datastore"
 	"github.com/drborges/appx"
-	"fmt"
 )
 
 type Post struct {
@@ -31,7 +30,6 @@ func (this Posts) ByAuthor(author string) *datastore.Query {
 func (this Posts) ByTagNames(tagNames []string) *datastore.Query {
 	q := appx.From(&Post{})
 	for _, name := range tagNames {
-		println(fmt.Sprintf("######### %v", name))
 		q = q.Filter("Tags=", name)
 	}
 	return q

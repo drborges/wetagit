@@ -22,3 +22,27 @@ func (this *feeds_controller) Fetch(params martini.Params) {
 
 	this.RenderData(feed)
 }
+
+func (this *feeds_controller) Follow(params martini.Params, user *models.User) {
+	subscription := &models.Subscription{Feed: params["id"]}
+	subscription.BelongsTo(user)
+
+	if err := this.CachedDatastore.Create(subscription); err != nil {
+		this.RenderStatusNotFoundMessage("Was not able to subscribe to feed %v.", subscription.Feed)
+		return
+	}
+
+	this.RenderData(subscription)
+}
+
+func (this *feeds_controller) Unfollow(params martini.Params, user *models.User) {
+	subscription := &models.Subscription{Feed: params["id"]}
+	subscription.BelongsTo(user)
+
+	if err := this.CachedDatastore.Delete(subscription); err != nil {
+		this.RenderStatusNotFoundMessage("Was not able to unsubscribe from feed %v.", subscription.Feed)
+		return
+	}
+
+	this.RenderData(subscription)
+}

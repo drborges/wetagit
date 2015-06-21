@@ -6,21 +6,23 @@ import (
 
 type Subscription struct {
 	appx.Model
-	Tag string `json:"tag"`
+	Feed       string `json:"feed"`
 }
 
-func (this Subscription) KeyMetadata() *appx.KeyMetadata {
+func (this *Subscription) KeyMetadata() *appx.KeyMetadata {
 	return &appx.KeyMetadata{
 		Kind:      "Subscriptions",
-		StringID:  this.Tag,
-		HasParent: true, // Belongs to a User
+		StringID:  this.Feed,
+		HasParent: true, // Belongs to a user
 	}
+}
+
+func (this *Subscription) CacheID() string {
+	return this.ResourceID()
+}
+
+func (this *Subscription) BelongsTo(user *User) {
+	this.SetParentKey(user.Key())
 }
 
 type Subscriptions []*Subscription
-
-func (this Subscriptions) BelongTo(user User) {
-	for _, subscription := range this {
-		subscription.SetParentKey(user.Key())
-	}
-}

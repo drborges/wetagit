@@ -22,10 +22,16 @@ func (this User) CacheID() string {
 	return this.Name
 }
 
+// Overrides the default appx.Model.ResourceID
+// to use the User.Name as ID rather than the
+// datastore encoded Key
 func (this User) ResourceID() string {
 	return this.Name
 }
 
+// Overrides the default appx.Model.SetResourceID
+// to set the User.Name from the ID rather than the
+// decoding datastore encoded Key
 func (this *User) SetResourceID(id string) error {
 	this.Name = id
 	return nil

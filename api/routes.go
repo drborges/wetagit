@@ -41,17 +41,15 @@ func Router() http.Handler {
 	router.Use(controllers.Feeds.Register)
 	{
 		router.Get("/feeds/:id", controllers.Feeds.Fetch)
+		router.Post("/feeds/:id/follow", controllers.Feeds.Follow)
+		router.Post("/feeds/:id/unfollow", controllers.Feeds.Unfollow)
+
 	}
 
 	router.Use(controllers.Users.Register)
 	{
 		router.Post("/users", Body(models.User{}), controllers.Users.Create)
 		router.Get("/users/:id", controllers.Users.Retrieve)
-	}
-
-	router.Use(controllers.Subscriptions.Register)
-	{
-		router.Post("/subscriptions", Body(models.Subscriptions{}), controllers.Subscriptions.Create)
 	}
 
 	return router
